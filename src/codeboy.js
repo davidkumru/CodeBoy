@@ -7,7 +7,6 @@ var codeboyPosition = {x: 30, y: 240, width: 30, height: 60, color: "black"};
 var direction = "";
 var imageSun = new Image();
 var imageGrass = new Image();
-// var imageSkye = new Image();
 
 renderBlock(skye);
 renderBlock(world);
@@ -17,21 +16,11 @@ function renderBlock(position) {
   context.fillStyle = position.color;
   context.fillRect(position.x, position.y, position.width, position.height);
 
-  // imageSkye.onload = function() {
-  //   context.drawImage(imageSkye, 0, 0, 1100, 200);
-  // };
-  // imageSkye.src = 'img/skye.png';
+  imageGrass.src = 'img/marioug.png';
+  context.drawImage(imageGrass, 0, 300, 900, 100);
 
-  imageGrass.onload = function() {
-    context.drawImage(imageGrass, -70, 270, 1100, 200);
-  };
-  imageGrass.src = 'img/grass.png';
-
-  imageSun.onload = function() {
-    context.drawImage(imageSun, 825, 25, 50, 50);
-  };
-  imageSun.src = 'img/sun.png';
-
+  imageSun.src = 'img/sun2.png';
+  context.drawImage(imageSun, 800, 0, 100, 100);
 };
 
 function moveBoy() {
