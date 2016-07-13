@@ -51,7 +51,7 @@ function land() {
     counter++;
     if(counter === 7) {
       clearInterval(interval);
-      landed = true
+      landed = true;
     }
   }, 30);
 }
@@ -71,12 +71,10 @@ function moveBoy() {
     console.log("left")
     codeboyPosition.x -= 15;
     rerender()
-    setTimeout(function(){ keyCombo[1] = 0 }, 60);
   } else if (keyCombo.includes(39)) {
     console.log("right")
     codeboyPosition.x += 15;
     rerender()
-    setTimeout(function(){ keyCombo[1] = 0 }, 60);
   }
 };
 
