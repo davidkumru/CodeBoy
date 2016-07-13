@@ -5,12 +5,17 @@ var skye = {x: 0, y: 0, width: 900, height: 400, color: "#9FABCF"};
 var world = {x: 0, y: 300, width: 900, height: 100, color: "#A1D490"};
 var codeboyPosition = {x: 30, y: 240, width: 30, height: 60, color: "black"};
 var direction = "";
+var keyCombo = [];
+var landed = true
 var imageSun = new Image();
 var imageGrass = new Image();
 
-renderBlock(skye);
-renderBlock(world);
-renderBlock(codeboyPosition);
+function rerender() {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  renderBlock(skye);
+  renderBlock(world);
+  renderBlock(codeboyPosition);
+}
 
 function renderBlock(position) {
   context.fillStyle = position.color;
@@ -23,65 +28,95 @@ function renderBlock(position) {
   context.drawImage(imageSun, 800, 0, 100, 100);
 };
 
+function jump(momentum) {
+  landed = false
+  var counter = 0;
+  var interval = setInterval(function() {
+    codeboyPosition.y -= 10;
+    rerender()
+    counter++;
+    if(counter === 7 && momentum == "right") {
+      console.log("jump right")
+      clearInterval(interval);
+      setTimeout(function(){ land(10) }, 60);
+      codeboyPosition.x += 60;
+    } else if (counter === 7 && momentum == "left") {
+      console.log("jump left")
+      clearInterval(interval);
+      setTimeout(function(){ land(10) }, 60);
+      codeboyPosition.x -= 60;
+    } else if (counter === 7) {
+      console.log("jump up")
+      clearInterval(interval);
+      setTimeout(function(){ land(10) }, 60);
+    }
+  }, 30);
+}
+
+function land() {
+  var counter = 0;
+  var interval = setInterval(function() {
+    codeboyPosition.y += 10;
+    rerender()
+    counter++;
+    if(counter === 7) {
+      clearInterval(interval);
+      landed = true;
+    }
+  }, 30);
+}
+
 function moveBoy() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  switch (direction) {
-
-    case "up":
-      var counter = 0;
-      var i = setInterval(function(){
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        codeboyPosition.y -= 5;
-        renderBlock(skye);
-        renderBlock(world);
-        renderBlock(codeboyPosition);
-          counter++;
-          if(counter === 12) {
-              clearInterval(i);
-          }
-      }, 12);
-    break;
-
-    case "down":
-    break;
-
-    case "left":
-      codeboyPosition.x -= 30;
-      renderBlock(skye);
-      renderBlock(world);
-      renderBlock(codeboyPosition);
-    break;
-
-    case "right":
-      codeboyPosition.x += 30;
-      renderBlock(skye);
-      renderBlock(world);
-      renderBlock(codeboyPosition);
-    break;
+  console.log(keyCombo)
+  if (keyCombo[0] === 38 && keyCombo[1] === 39) {
+    jump("right");
+    keyCombo = []
+  } else if (keyCombo[0] === 38 && keyCombo[1] === 37) {
+    jump("left");
+    keyCombo = []
+  } else if (keyCombo.includes(38)) {
+    jump();
+    keyCombo = []
+  } else if (keyCombo.includes(37)) {
+    console.log("left")
+    codeboyPosition.x -= 15;
+    rerender()
+  } else if (keyCombo.includes(39)) {
+    console.log("right")
+    codeboyPosition.x += 15;
+    rerender()
   }
 };
 
 function inputKey(e) {
-  e = e || window.event;
-  if (e.keyCode == '38') {
-    e.preventDefault();
-    direction = "up";
-    moveBoy()
-  }
-  else if (e.keyCode == '40') {
-    e.preventDefault();
-    direction = "down";
-  }
-  else if (e.keyCode == '37') {
-    e.preventDefault();
-    direction = "left";
-    moveBoy()
-  }
-  else if (e.keyCode == '39') {
-    e.preventDefault();
-    direction = "right";
-    moveBoy()
+  if (landed === true) {
+    e = e || window.event;
+    if (e.keyCode == '38') {
+      e.preventDefault();
+      direction = "up";
+      keyCombo[0]= e.keyCode;
+      moveBoy()
+    }
+    //else if (e.keyCode == '40') {
+    //e.preventDefault();
+    //direction = "down";
+    //keyCombo[0]= e.keyCode;
+    //}
+    else if (e.keyCode == '37') {
+      e.preventDefault();
+      direction = "left";
+      keyCombo[1]= e.keyCode;
+      moveBoy()
+    }
+    else if (e.keyCode == '39') {
+      e.preventDefault();
+      direction = "right";
+      keyCombo[1]= e.keyCode;
+      moveBoy()
+    }
   }
 };
 
 document.onkeydown = inputKey;
+
+rerender()
