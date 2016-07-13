@@ -16,27 +16,35 @@ function renderBlock(position) {
 function moveBoy() {
   context.clearRect(0, 0, canvas.width, canvas.height);
   switch (direction) {
+
     case "up":
-      for (i = 0; i < 3; i++) {
-        setTimeout(function() { console.log("test");}, 1000);
+      var counter = 0;
+      var i = setInterval(function(){
         context.clearRect(0, 0, canvas.width, canvas.height);
         codeboyPosition.y -= 20;
         renderBlock(codeboyPosition);
         renderBlock(world);
-      }
-      break;
+          counter++;
+          if(counter === 3) {
+              clearInterval(i);
+          }
+      }, 200);
+    break;
+
     case "down":
-      break;
+    break;
+
     case "left":
       codeboyPosition.x -= 30;
       renderBlock(codeboyPosition);
       renderBlock(world);
-      break;
+    break;
+
     case "right":
       codeboyPosition.x += 30;
       renderBlock(codeboyPosition);
       renderBlock(world);
-      break;
+    break;
   }
 };
 
