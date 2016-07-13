@@ -15,17 +15,24 @@ function renderBlock(position) {
 
 function moveBoy() {
   context.clearRect(0, 0, canvas.width, canvas.height);
+  console.log("moveboy starting")
   switch (direction) {
     case "up":
+      console.log("up case")
       for (i = 0; i < 3; i++) {
-        setTimeout(function() { console.log("test");}, 1000);
+        console.log("for loop")
         context.clearRect(0, 0, canvas.width, canvas.height);
         codeboyPosition.y -= 20;
         renderBlock(codeboyPosition);
         renderBlock(world);
-      }
+        setInterval(console.log("interval"), 1000);
+      };
       break;
     case "down":
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      codeboyPosition.y += 20;
+      renderBlock(codeboyPosition);
+      renderBlock(world);
       break;
     case "left":
       codeboyPosition.x -= 30;
@@ -50,6 +57,7 @@ function inputKey(e) {
   else if (e.keyCode == '40') {
     e.preventDefault();
     direction = "down";
+    moveBoy()
   }
   else if (e.keyCode == '37') {
     e.preventDefault();
