@@ -5,6 +5,7 @@ var world = {x: 0, y: 300, width: 900, height: 100, color: "#A1D490"};
 var codeboyPosition = {x: 30, y: 240, width: 30, height: 60, color: "black"};
 var direction = "";
 var keyCombo = [];
+var landed = true
 
 function rerender() {
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -18,22 +19,22 @@ function renderBlock(position) {
 };
 
 function jump(momentum) {
+  landed = false
   var counter = 0;
   var interval = setInterval(function() {
     codeboyPosition.y -= 10;
     rerender()
     counter++;
-    keyCombo = []
     if(counter === 7 && momentum == "right") {
       console.log("jump right")
       clearInterval(interval);
       setTimeout(function(){ land(10) }, 60);
-      codeboyPosition.x += 30;
+      codeboyPosition.x += 60;
     } else if (counter === 7 && momentum == "left") {
       console.log("jump left")
       clearInterval(interval);
       setTimeout(function(){ land(10) }, 60);
-      codeboyPosition.x -= 30;
+      codeboyPosition.x -= 60;
     } else if (counter === 7) {
       console.log("jump up")
       clearInterval(interval);
@@ -50,6 +51,7 @@ function land() {
     counter++;
     if(counter === 7) {
       clearInterval(interval);
+      landed = true
     }
   }, 30);
 }
@@ -58,53 +60,52 @@ function moveBoy() {
   console.log(keyCombo)
   if (keyCombo[0] === 38 && keyCombo[1] === 39) {
     jump("right");
+    keyCombo = []
   } else if (keyCombo[0] === 38 && keyCombo[1] === 37) {
     jump("left");
+    keyCombo = []
   } else if (keyCombo.includes(38)) {
     jump();
-  }
-
-  switch (direction) {
-    case "down":
-      codeboyPosition.y += 0;
-      rerender()
-      break;
-    case "left":
-      codeboyPosition.x -= 15;
-      rerender()
-      break;
-    case "right":
-      codeboyPosition.x += 15;
-      rerender()
-      break;
+    keyCombo = []
+  } else if (keyCombo.includes(37)) {
+    console.log("left")
+    codeboyPosition.x -= 15;
+    rerender()
+    setTimeout(function(){ keyCombo[1] = 0 }, 60);
+  } else if (keyCombo.includes(39)) {
+    console.log("right")
+    codeboyPosition.x += 15;
+    rerender()
+    setTimeout(function(){ keyCombo[1] = 0 }, 60);
   }
 };
 
 function inputKey(e) {
-  e = e || window.event;
-  if (e.keyCode == '38') {
-    e.preventDefault();
-    direction = "up";
-    keyCombo[0]= e.keyCode;
-    moveBoy()
-  }
-  else if (e.keyCode == '40') {
-    e.preventDefault();
-    direction = "down";
-    keyCombo[0]= e.keyCode;
-    moveBoy()
-  }
-  else if (e.keyCode == '37') {
-    e.preventDefault();
-    direction = "left";
-    keyCombo[1]= e.keyCode;
-    moveBoy()
-  }
-  else if (e.keyCode == '39') {
-    e.preventDefault();
-    direction = "right";
-    keyCombo[1]= e.keyCode;
-    moveBoy()
+  if (landed === true) {
+    e = e || window.event;
+    if (e.keyCode == '38') {
+      e.preventDefault();
+      direction = "up";
+      keyCombo[0]= e.keyCode;
+      moveBoy()
+    }
+    //else if (e.keyCode == '40') {
+    //e.preventDefault();
+    //direction = "down";
+    //keyCombo[0]= e.keyCode;
+    //}
+    else if (e.keyCode == '37') {
+      e.preventDefault();
+      direction = "left";
+      keyCombo[1]= e.keyCode;
+      moveBoy()
+    }
+    else if (e.keyCode == '39') {
+      e.preventDefault();
+      direction = "right";
+      keyCombo[1]= e.keyCode;
+      moveBoy()
+    }
   }
 };
 
