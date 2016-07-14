@@ -3,7 +3,6 @@ var context = canvas.getContext("2d");
 
 var sky = {x: 0, y: 0, width: 900, height: 400, color: "#9FABCF"};
 var world = {x: 0, y: 300, width: 900, height: 100, color: "#A1D490"};
-//var codeboyPosition = {x: 30, y: 240, width: 30, height: 60, color: "black"};
 var direction = "";
 var keyCombo = [];
 var landed = true
@@ -18,7 +17,6 @@ function rerender() {
   renderBlock(sky);
   renderBlock(world);
   renderBlock(blockOne);
-  //renderBlock(codeboyPosition);
 }
 
 function renderBlock(position) {
@@ -39,12 +37,15 @@ function checkCollision(momentum) {
   if (_.range(blockOne.x - 30, blockOne.x + 30 + 1).includes(imageBoyPosition[0])) {
     console.log(_.range(blockOne.x - 15, blockOne.x + 15 + 1))
     console.log(imageBoyPosition[0])
-    console.log("momentum: ", momentum)
+    console.log(imageBoyPosition[1])
     if (momentum === "left" && imageBoyPosition[0] > blockOne.x + 15 + 1) {
-      console.log("left hit", momentum)
+      console.log("left hit")
       return true
     } else if (momentum === "right" && imageBoyPosition[0] < blockOne.x - 15) {
-      console.log("right hit", momentum)
+      console.log("right hit")
+      return true
+    } else if (momentum === "land" && imageBoyPosition[1] < blockOne.y + blockOne.height) {
+      console.log("land hit")
       return true
     } else {
       return false
@@ -59,18 +60,15 @@ function jump(momentum) {
     imageBoyPosition[1] -= 10;
     rerender()
     counter++;
-    if(counter === 7 && momentum === "right") {
-      console.log("jump right")
+    if(counter === 6 && momentum === "right") {
       clearInterval(interval);
       setTimeout(function(){ land() }, 60);
       imageBoyPosition[0] += 60;
-    } else if (counter === 7 && momentum === "left") {
-      console.log("jump left")
+    } else if (counter === 6 && momentum === "left") {
       clearInterval(interval);
       setTimeout(function(){ land() }, 60);
       imageBoyPosition[0] -= 60;
-    } else if (counter === 7) {
-      console.log("jump up")
+    } else if (counter === 6) {
       clearInterval(interval);
       setTimeout(function(){ land() }, 60);
     }
@@ -78,20 +76,19 @@ function jump(momentum) {
 }
 
 function land() {
-  var counter = 0;
   var interval = setInterval(function() {
-    imageBoyPosition[1] += 10;
-    rerender()
-    counter++;
-    if(counter === 7) {
-      clearInterval(interval);
-      landed = true;
+    if (!checkCollision("land") && imageBoyPosition[1] < 240) {
+      imageBoyPosition[1] += 10;
     }
+    if(imageBoyPosition[1] >= 240) {
+      clearInterval(interval);
+    }
+    rerender()
+    landed = true;
   }, 30);
 }
 
 function moveBoy() {
-  console.log(keyCombo)
   if (keyCombo[0] === 38 && keyCombo[1] === 39) {
     jump("right");
     keyCombo = []
@@ -102,13 +99,11 @@ function moveBoy() {
     jump();
     keyCombo = []
   } else if (keyCombo.includes(37)) {
-    console.log("left")
     if (!checkCollision("left")) {
       imageBoyPosition[0] -= 15;
     }
     rerender()
   } else if (keyCombo.includes(39)) {
-    console.log("right")
     if (!checkCollision("right")) {
       imageBoyPosition[0] += 15;
     }
