@@ -18,6 +18,7 @@ var imageBoy = new Image();
 var imageBlock = new Image();
 var imageBoyPosition = [30, 240, 30, 60];
 var blockOne = {x: 90, y: 240, width: 30, height: 60, color: "black"};
+var audio = new Audio("img/Mario-jump-sound.mp3");
 
 function rerender() {
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -67,7 +68,7 @@ function shot() {
       counter -= 172;
     }
     //if (_.range(imageBoyPosition[0] - 30, imageBoyPosition + 30 + 1).includes(imageBulletPosition[0]) && _.range(imageBoyPosition[1], imageBoyPosition[1] + 40).includes(imageBulletPosition[1])) {
-      //window.location.reload();
+    //window.location.reload();
     //}
   }, 10);
 }
@@ -107,6 +108,7 @@ function checkCollision(momentum) {
 function jump(momentum) {
   landed = false
   var counter = 0;
+  audio.play();
   var interval = setInterval(function() {
     imageBoyPosition[1] -= 10;
     rerender()
