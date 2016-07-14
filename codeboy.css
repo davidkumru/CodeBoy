@@ -6,6 +6,11 @@ canvas {
 
 h2 {
   text-align: center;
+  color: #004B0B;
+  text-shadow: 2px 1px #7BA747;
+  font-family: monospace;
+  font-size: 30px;
+  font-weight: bold;
 }
 
 body {
@@ -17,4 +22,22 @@ body {
 
 p {
   text-align: center;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.wrap {
+    position: relative;
+}
+
+.instructions{
+  font-family: monospace;
+  font-size: 14px;
+  background-color: #7BA747;
+  border-style: dashed;
+  border-color: #004B0B;
+  border-radius: 10px;
+  text-align: center;
+  width: 400px;
+  margin: auto;
 }
