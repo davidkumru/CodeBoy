@@ -9,6 +9,9 @@ var keyCombo = [];
 var landed = true
 var imageSun = new Image();
 var imageGrass = new Image();
+var imageCanon = new Image();
+var imageBullet = new Image();
+var imageBulletPosition = [635, 273, 19, 19];
 var imageBoy = new Image();
 var imageBoyPosition = [30, 240, 30, 60];
 
@@ -16,6 +19,7 @@ function rerender() {
   context.clearRect(0, 0, canvas.width, canvas.height);
   renderBlock(sky);
   renderBlock(world);
+
   //renderBlock(codeboyPosition);
 }
 
@@ -29,9 +33,28 @@ function renderBlock(position) {
   imageSun.src = 'img/sun2.png';
   context.drawImage(imageSun, 800, 0, 100, 100);
 
+  imageCanon.src = 'img/BillBlasterPM.png';
+  context.drawImage(imageCanon, 650, 271, 32, 32);
+
+  imageBullet.src = 'img/bullet.png';
+  context.drawImage(imageBullet, imageBulletPosition[0], imageBulletPosition[1], imageBulletPosition[2], imageBulletPosition[3]);
+
   imageBoy.src = 'img/SMB3_Smallmario.png';
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
 };
+
+function shot() {
+  var counter = 0;
+  var interval = setInterval(function() {
+    imageBulletPosition[0] -= 3;
+    rerender()
+    counter++;
+    if(counter === 227){
+      imageBulletPosition[0] += 681;
+      counter -= 227;
+    }
+  }, 10);
+}
 
 function jump(momentum) {
   landed = false
@@ -125,3 +148,5 @@ function inputKey(e) {
 document.onkeydown = inputKey;
 
 rerender()
+
+shot();
