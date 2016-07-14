@@ -1,7 +1,7 @@
 var canvas = document.getElementById("level");
 var context = canvas.getContext("2d");
 
-var skye = {x: 0, y: 0, width: 900, height: 400, color: "#9FABCF"};
+var sky = {x: 0, y: 0, width: 900, height: 400, color: "#9FABCF"};
 var world = {x: 0, y: 300, width: 900, height: 100, color: "#A1D490"};
 var codeboyPosition = {x: 30, y: 240, width: 30, height: 60, color: "black"};
 var direction = "";
@@ -9,10 +9,11 @@ var keyCombo = [];
 var landed = true
 var imageSun = new Image();
 var imageGrass = new Image();
+var imageBoy = new Image();
 
 function rerender() {
   context.clearRect(0, 0, canvas.width, canvas.height);
-  renderBlock(skye);
+  renderBlock(sky);
   renderBlock(world);
   renderBlock(codeboyPosition);
 }
@@ -26,6 +27,9 @@ function renderBlock(position) {
 
   imageSun.src = 'img/sun2.png';
   context.drawImage(imageSun, 800, 0, 100, 100);
+
+  imageBoy.src = 'img/SMB3_Smallmario.png';
+  context.drawImage(imageBoy, 30, 240, 30, 60);
 };
 
 function jump(momentum) {
@@ -38,17 +42,17 @@ function jump(momentum) {
     if(counter === 7 && momentum == "right") {
       console.log("jump right")
       clearInterval(interval);
-      setTimeout(function(){ land(10) }, 60);
+      setTimeout(function(){ land() }, 60);
       codeboyPosition.x += 60;
     } else if (counter === 7 && momentum == "left") {
       console.log("jump left")
       clearInterval(interval);
-      setTimeout(function(){ land(10) }, 60);
+      setTimeout(function(){ land() }, 60);
       codeboyPosition.x -= 60;
     } else if (counter === 7) {
       console.log("jump up")
       clearInterval(interval);
-      setTimeout(function(){ land(10) }, 60);
+      setTimeout(function(){ land() }, 60);
     }
   }, 30);
 }
