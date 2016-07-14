@@ -10,12 +10,13 @@ var landed = true
 var imageSun = new Image();
 var imageGrass = new Image();
 var imageBoy = new Image();
+var imageBoyPosition = [30, 240, 30, 60];
 
 function rerender() {
   context.clearRect(0, 0, canvas.width, canvas.height);
   renderBlock(sky);
   renderBlock(world);
-  renderBlock(codeboyPosition);
+  //renderBlock(codeboyPosition);
 }
 
 function renderBlock(position) {
@@ -29,26 +30,26 @@ function renderBlock(position) {
   context.drawImage(imageSun, 800, 0, 100, 100);
 
   imageBoy.src = 'img/SMB3_Smallmario.png';
-  context.drawImage(imageBoy, 30, 240, 30, 60);
+  context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
 };
 
 function jump(momentum) {
   landed = false
   var counter = 0;
   var interval = setInterval(function() {
-    codeboyPosition.y -= 10;
+    imageBoyPosition[1] -= 10;
     rerender()
     counter++;
     if(counter === 7 && momentum == "right") {
       console.log("jump right")
       clearInterval(interval);
       setTimeout(function(){ land() }, 60);
-      codeboyPosition.x += 60;
+      imageBoyPosition[0] += 60;
     } else if (counter === 7 && momentum == "left") {
       console.log("jump left")
       clearInterval(interval);
       setTimeout(function(){ land() }, 60);
-      codeboyPosition.x -= 60;
+      imageBoyPosition[0] -= 60;
     } else if (counter === 7) {
       console.log("jump up")
       clearInterval(interval);
@@ -60,7 +61,7 @@ function jump(momentum) {
 function land() {
   var counter = 0;
   var interval = setInterval(function() {
-    codeboyPosition.y += 10;
+    imageBoyPosition[1] += 10;
     rerender()
     counter++;
     if(counter === 7) {
@@ -83,11 +84,11 @@ function moveBoy() {
     keyCombo = []
   } else if (keyCombo.includes(37)) {
     console.log("left")
-    codeboyPosition.x -= 15;
+    imageBoyPosition[0] -= 15;
     rerender()
   } else if (keyCombo.includes(39)) {
     console.log("right")
-    codeboyPosition.x += 15;
+    imageBoyPosition[0] += 15;
     rerender()
   }
 };
