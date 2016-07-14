@@ -45,15 +45,15 @@ function renderBlock(position) {
   imageBullet.src = 'img/bullet.png';
   context.drawImage(imageBullet, imageBulletPosition[0], imageBulletPosition[1], imageBulletPosition[2], imageBulletPosition[3]);
 
-  imageFlying.src = 'img/vlieg.png';
-  context.drawImage(imageFlying, imageFlyingPosition[0], imageFlyingPosition[1], imageFlyingPosition[2], imageFlyingPosition[3]);
-
   imageBlock.src = 'img/block.png';
   context.drawImage(imageBlock, 90, 240, 30, 30);
   context.drawImage(imageBlock, 90, 270, 30, 30);
 
   imageBoy.src = 'img/SMB3_Smallmario.png';
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
+
+  imageFlying.src = 'img/vlieg.png';
+  context.drawImage(imageFlying, imageFlyingPosition[0], imageFlyingPosition[1], imageFlyingPosition[2], imageFlyingPosition[3]);
 };
 
 function shot() {
@@ -66,6 +66,9 @@ function shot() {
       imageBulletPosition[0] += 681;
       counter -= 227;
     }
+    //if (_.range(imageBoyPosition[0] - 30, imageBoyPosition + 30 + 1).includes(imageBulletPosition[0]) && _.range(imageBoyPosition[1], imageBoyPosition[1] + 40).includes(imageBulletPosition[1])) {
+      //window.location.reload();
+    //}
   }, 10);
 }
 
@@ -92,7 +95,7 @@ function checkCollision(momentum) {
     } else if (momentum === "right" && imageBoyPosition[0] < blockOne.x - 15) {
       console.log("right hit")
       return true
-      } else if (momentum === "land" && imageBoyPosition[1] < blockOne.y + blockOne.height) {
+    } else if (momentum === "land" && imageBoyPosition[1] < blockOne.y + blockOne.height) {
       console.log("land hit")
       return true
     } else {
