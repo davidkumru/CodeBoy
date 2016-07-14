@@ -32,7 +32,7 @@ function renderBlock(position) {
   context.fillRect(position.x, position.y, position.width, position.height);
 
   imageBackg.src = 'img/marioworld.png';
-  context.drawImage(imageBackg, 0, 0, 900, 600);
+  context.drawImage(imageBackg, 0, -10, 900, 600);
 
   imageGrass.src = 'img/marioug.png';
   context.drawImage(imageGrass, 0, 300, 900, 100);

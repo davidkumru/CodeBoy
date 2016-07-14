@@ -14,8 +14,8 @@ h2 {
 }
 
 body {
-  /*background-image: url("img/index.png");*/
-  /*background-color: #cccccc;*/
+  background-image: url("img/7pDoP2C.png");
+  background-color: #cccccc;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -30,14 +30,20 @@ p {
     position: relative;
 }
 
-.instructions{
+.instructions {
   font-family: monospace;
   font-size: 14px;
-  background-color: #7BA747;
-  border-style: dashed;
-  border-color: #004B0B;
+  background-color: white;
+  border-style: solid;
+  border-color: black;
   border-radius: 10px;
   text-align: center;
   width: 400px;
   margin: auto;
+}
+
+canvas {
+  border-width: 3px;
+  border-radius: 10px;
+  border-style: solid
 }
