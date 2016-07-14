@@ -12,6 +12,8 @@ var imageGrass = new Image();
 var imageCanon = new Image();
 var imageBullet = new Image();
 var imageBulletPosition = [635, 273, 19, 19];
+var imageFlying = new Image();
+var imageFlyingPosition = [830, -30, 30, 30];
 var imageBoy = new Image();
 var imageBoyPosition = [30, 240, 30, 60];
 
@@ -39,6 +41,9 @@ function renderBlock(position) {
   imageBullet.src = 'img/bullet.png';
   context.drawImage(imageBullet, imageBulletPosition[0], imageBulletPosition[1], imageBulletPosition[2], imageBulletPosition[3]);
 
+  imageFlying.src = 'img/vlieg.png';
+  context.drawImage(imageFlying, imageFlyingPosition[0], imageFlyingPosition[1], imageFlyingPosition[2], imageFlyingPosition[3]);
+
   imageBoy.src = 'img/SMB3_Smallmario.png';
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
 };
@@ -54,6 +59,21 @@ function shot() {
       counter -= 227;
     }
   }, 10);
+}
+
+function flyingthing() {
+  var counter = 0;
+  var interval = setInterval(function() {
+    imageFlyingPosition[0] -= 3;
+    imageFlyingPosition[1] += 2;
+    rerender()
+    counter++;
+    if(counter === 220){
+      imageFlyingPosition[0] += 660;
+      imageFlyingPosition[1] -= 440;
+      counter -= 220;
+    }
+  }, 20);
 }
 
 function jump(momentum) {
@@ -150,3 +170,4 @@ document.onkeydown = inputKey;
 rerender()
 
 shot();
+flyingthing();
