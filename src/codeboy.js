@@ -9,6 +9,7 @@ var landed = true
 var imageSun = new Image();
 var imageGrass = new Image();
 var imageBoy = new Image();
+var imageBlock = new Image();
 var imageBoyPosition = [30, 240, 30, 60];
 var blockOne = {x: 90, y: 240, width: 30, height: 60, color: "black"};
 
@@ -29,22 +30,23 @@ function renderBlock(position) {
   imageSun.src = 'img/sun2.png';
   context.drawImage(imageSun, 800, 0, 100, 100);
 
+  imageBlock.src = 'img/block.png';
+  context.drawImage(imageBlock, 90, 240, 30, 30);
+  context.drawImage(imageBlock, 90, 270, 30, 30);
+
   imageBoy.src = 'img/SMB3_Smallmario.png';
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
 };
 
 function checkCollision(momentum) {
   if (_.range(blockOne.x - 30, blockOne.x + 30 + 1).includes(imageBoyPosition[0])) {
-    console.log(_.range(blockOne.x - 15, blockOne.x + 15 + 1))
-    console.log(imageBoyPosition[0])
-    console.log(imageBoyPosition[1])
     if (momentum === "left" && imageBoyPosition[0] > blockOne.x + 15 + 1) {
       console.log("left hit")
       return true
     } else if (momentum === "right" && imageBoyPosition[0] < blockOne.x - 15) {
       console.log("right hit")
       return true
-    } else if (momentum === "land" && imageBoyPosition[1] < blockOne.y + blockOne.height) {
+      } else if (momentum === "land" && imageBoyPosition[1] < blockOne.y + blockOne.height) {
       console.log("land hit")
       return true
     } else {
