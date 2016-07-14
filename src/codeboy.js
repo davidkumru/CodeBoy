@@ -58,9 +58,9 @@ function shot() {
     imageBulletPosition[0] -= 3;
     rerender()
     counter++;
-    if(counter === 227){
-      imageBulletPosition[0] += 681;
-      counter -= 227;
+    if(counter === 172){
+      imageBulletPosition[0] += 516;
+      counter -= 172;
     }
   }, 10);
 }
