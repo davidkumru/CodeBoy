@@ -7,6 +7,7 @@ var direction = "";
 var keyCombo = [];
 var landed = true
 var imageSun = new Image();
+var imageBackg = new Image();
 var imageGrass = new Image();
 var imageCanon = new Image();
 var imageBullet = new Image();
@@ -28,6 +29,9 @@ function rerender() {
 function renderBlock(position) {
   context.fillStyle = position.color;
   context.fillRect(position.x, position.y, position.width, position.height);
+
+  imageBackg.src = 'img/marioworld.png';
+  context.drawImage(imageBackg, 0, 0, 900, 600);
 
   imageGrass.src = 'img/marioug.png';
   context.drawImage(imageGrass, 0, 300, 900, 100);
