@@ -26,21 +26,21 @@ imageBlock.src = 'img/block.png';
 var imageBoy = new Image();
 imageBoy.src = 'img/SMB3_Smallmario.png';
 var imageBoyPosition = [30, 240, 30, 60];
-var imageBird = new Image();
-imageBird.src = 'img/vlieg.png';
-var imageBirdPosition = [830, -30, 30, 30];
+//var imageBird = new Image();
+//imageBird.src = 'img/vlieg.png';
+//var imageBirdPosition = [830, -30, 30, 30];
 
 //jumpSound
 var jumpSound = new Audio("img/Mario-jump-sound.mp3");
 
 function rerender() {
   //level objects
-  var blocks = [{x: 90, y: 240, width: 30, height: 30, image: imageBlock}, {x: 180, y: 240, width: 30, height: 30, image: imageBlock}]
-  var cannons = [{x: 650, y: 271, width: 32, height: 32, image: imageCannon}]
-  var cannonbullets = [{x: imageBulletPosition[0], y: imageBulletPosition[1], width: imageBulletPosition[2], height: imageBulletPosition[3], image: imageBullet}]
-  var birds = [{x: imageBirdPosition[0], y: imageBirdPosition[1], width: imageBirdPosition[2], height: imageBirdPosition[3], image: imageBird}]
+  var blocks = [{x: 90, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}]
+  var cannons = [{x: 650, y: 271, width: 32, height: 32, image: imageCannon, name: "cannon"}]
+  var cannonbullets = [{x: imageBulletPosition[0], y: imageBulletPosition[1], width: imageBulletPosition[2], height: imageBulletPosition[3], image: imageBullet, name: "bullet"}]
+  //var birds = [{x: imageBirdPosition[0], y: imageBirdPosition[1], width: imageBirdPosition[2], height: imageBirdPosition[3], image: imageBird}]
 
-  levelObjects = [blocks, cannons, cannonbullets, birds]
+  levelObjects = [blocks, cannons, cannonbullets]
 
   context.drawImage(imageBackg, 0, -10, 900, 600);
   context.drawImage(imageGround, 0, 300, 900, 100);
@@ -56,6 +56,8 @@ function rerender() {
 
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
 
+  //checkCollision()
+
 };
 
 function shot() {
@@ -68,48 +70,88 @@ function shot() {
       imageBulletPosition[0] += 516;
       counter -= 172;
     }
-    //if (_.range(imageBoyPosition[0] - 30, imageBoyPosition + 30 + 1).includes(imageBulletPosition[0]) && _.range(imageBoyPosition[1], imageBoyPosition[1] + 40).includes(imageBulletPosition[1])) {
-    //window.location.reload();
-    //}
   }, 10);
 }
 
-function flyingthing() {
-  var counter = 0;
-  var interval = setInterval(function() {
-    imageBirdPosition[0] -= 3;
-    imageBirdPosition[1] += 2;
-    rerender()
-    counter++;
-    if(counter === 220){
-      imageBirdPosition[0] += 660;
-      imageBirdPosition[1] -= 440;
-      counter -= 220;
-    }
-  }, 20);
-}
+//function flyingthing() {
+//var counter = 0;
+//var interval = setInterval(function() {
+//imageBirdPosition[0] -= 3;
+//imageBirdPosition[1] += 2;
+//rerender()
+//counter++;
+//if(counter === 220){
+//imageBirdPosition[0] += 660;
+//imageBirdPosition[1] -= 440;
+//counter -= 220;
+//}
+//}, 20);
+//}
 
 function checkCollision(momentum) {
+  var onTop = false
+  var onSide = false
+  var collided = false
+  for (i = 0; i < levelObjects.length; i++) {
+    x = levelObjects[i]
+    for (y = 0; y < x.length; y++) {
+      item = x[y]
+      rangeObjectX = _.range(item.x - 1, item.x + item.width + 1)
+      rangeBoyX = _.range(imageBoyPosition[0], imageBoyPosition[0] + imageBoyPosition[2])
+      rangeObjectY = _.range(item.y - 1, item.y + item.height + 1)
+      rangeBoyY = _.range(imageBoyPosition[1], imageBoyPosition[1] + imageBoyPosition[3])
+
+      if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
+        onTop = true
+        console.log("on top: ", onTop)
+        accept = true
+      }
+      if (findOne(rangeObjectY, rangeBoyY) && findOne(rangeObjectX, rangeBoyX)) {
+        onSide = true
+        console.log("on side: ", onSide)
+      }
+      if (onTop && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
+        attack = true
+        console.log("attacked: ", collided)
+      }
+      if (momentum === "left" && imageBoyPosition[0] === item.x + item.width) {
+        console.log("left hit")
+        accept = true
+      } else if (momentum === "right" && imageBoyPosition[0] === item.x - item.width) {
+        console.log("right hit")
+        accept = true
+        //} else if (momentum === "land" && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
+        //console.log("elevated")
+        //return true
+      } else {
+        accept =  false
+      }
+    }
+  }
+  return accept
+}
+
+function findOne(rangeObject, rangeBoy) {
+  return rangeBoy.some(function (v) {
+    return rangeObject.indexOf(v) >= 0;
+  });
+};
+
+function checkLanding() {
   for (i = 0; i < levelObjects.length; i++) {
     x = levelObjects[i]
     for (y = 0; y < x.length; y++) {
       item = x[y]
       if (_.range(item.x - item.width, item.x + item.width + 1).includes(imageBoyPosition[0])) {
-        console.log(_.range(item.x - item.width, item.x + item.width + 1))
-        console.log(imageBoyPosition[1] + imageBoyPosition[3])
-        console.log(item.y)
-        if (momentum === "left" && imageBoyPosition[0] > item.x + (item.width / 2) + 1) {
-          console.log("left hit")
-          return true
-        } else if (momentum === "right" && imageBoyPosition[0] < item.x - (item.width / 2)) {
-          console.log("right hit")
-          return true
-        } else if (momentum === "land" && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
-          console.log("land hit")
-          return true
-        } else {
-          return false
+        //console.log(_.range(item.x - item.width, item.x + item.width + 1))
+        //console.log(imageBoyPosition[1] + imageBoyPosition[3])
+        console.log(item)
+        console.log(imageBoyPosition[1] + (imageBoyPosition[3] / 2))
+        console.log(_.range(item.y - item.height, item.y + item.height + 1))
+        if (item.name === "bullet" && _.range(item.y - item.height, item.y + item.height + 1).includes(imageBoyPosition[1] + (imageBoyPosition[3]))) {
+          window.location.reload();
         }
+        console.log(momentum)
       }
     }
   }
@@ -209,4 +251,4 @@ rerender();
 
 shot();
 
-flyingthing();
+//flyingthing();
