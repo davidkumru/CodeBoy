@@ -10,6 +10,8 @@ var keyCombo = [];
 //background images
 var imageBackg = new Image();
 imageBackg.src = 'img/marioworld.png';
+var imageBackg2 = new Image();
+imageBackg2.src = 'img/dessert.png';
 var imageGround = new Image();
 imageGround.src = 'img/marioug.png';
 var imageSun = new Image();
