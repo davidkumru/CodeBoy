@@ -6,27 +6,47 @@
     <link rel="stylesheet" type="text/css" href="codeboy.css">
   </head>
   <body>
-
-
     <div id="header">
           <h1>CodeBoy</h1>
           <nav>
           <a href="scorelist.html">list score player</a> |
           <a href="#">share social media</a> |
           </nav>
-  </div>
+    </div>
 
-      <p>
-        " The little block of code that could! "
-      </p>
+    <p>" The little block of code that could! "</p>
+<!-- Start button and name form -->
+      <div class="SplashScreen" style="display: show;">
+<!-- User form -->
+        <form id="userform" onsubmit="return addUser()">
+          <h3>Add a User:</h3> <input id="username" type="text" name="username" placeholder="Name: ..."/>
+          <input type="button" onclick="myFunction()" value="Submit">
+        </form>
+        <hr>
+        <input id="StartButton" type="button"  value="Start"/>
+      </div>
+      <br>
 
-      <canvas id="level" width="900px" height="400px"></canvas>
+<!-- canvas code -->
+      <canvas id="level" width="900px" height="400px" style="display: none;">CodeBoy!</canvas>
       <script src="src/lodash.js"></script>
       <script src="src/codeboy.js"></script>
-      <div class="instructions">
-        Use the arrows keys to move and jump.<br>
-        <img src="img/keys.png" alt="Arrow keys keyboard" height="60">
-      </div>
 
+<!-- Instructions on how to play below the game -->
+    <div class="instructions">
+      Use the arrows keys to move and jump.<br>
+      <img src="img/keys.png" alt="Arrow keys keyboard" height="60">
+    </div>
+
+<!-- start button -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script>
+        $(document).ready(function(){
+          $("#StartButton").click(function(){
+            $(".SplashScreen").hide();
+            $("#level").show();
+          });
+        });
+      </script>
   </body>
 </html>
