@@ -42,7 +42,7 @@ var levelObjects = [blocks]
 
 function rerender() {
   context.drawImage(imageBackg, 0, -10, 900, 600);
-  context.drawImage(twoImageBackg, 0, 0, 900, 450);
+  context.drawImage(twoImageBackg, 0, 0, 900, 485);
   context.drawImage(imageGround, 0, 300, 900, 100);
   context.drawImage(imageSun, 800, 0, 100, 100);
 
