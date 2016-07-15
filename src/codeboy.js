@@ -91,14 +91,14 @@ function shot() {
 function checkCollision(momentum) {
   var onTop = false
   var onSide = false
-  var collided = false
+  var accept = false
   for (i = 0; i < levelObjects.length; i++) {
     x = levelObjects[i]
     for (y = 0; y < x.length; y++) {
       item = x[y]
       rangeObjectX = _.range(item.x - 1, item.x + item.width + 1)
       rangeBoyX = _.range(imageBoyPosition[0], imageBoyPosition[0] + imageBoyPosition[2])
-      rangeObjectY = _.range(item.y - 1, item.y + item.height + 1)
+      rangeObjectY = _.range(item.y, item.y + item.height)
       rangeBoyY = _.range(imageBoyPosition[1], imageBoyPosition[1] + imageBoyPosition[3])
 
       if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
@@ -109,25 +109,19 @@ function checkCollision(momentum) {
       if (findOne(rangeObjectY, rangeBoyY) && findOne(rangeObjectX, rangeBoyX)) {
         onSide = true
         console.log("on side: ", onSide)
-      }
-      if (onTop && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
-        attack = true
-        console.log("attacked: ", collided)
-      }
-      if (momentum === "left" && imageBoyPosition[0] === item.x + item.width) {
-        console.log("left hit")
+        if (momentum === "left" && imageBoyPosition[0] < item.x + 15) {
+          console.log("left hit")
+          accept = false
+        } else if (momentum === "right" && imageBoyPosition[0] + imageBoyPosition[2] > item.x) {
+          console.log("right hit")
+          accept = false
+        } else {
         accept = true
-      } else if (momentum === "right" && imageBoyPosition[0] === item.x - item.width) {
-        console.log("right hit")
-        accept = true
-        //} else if (momentum === "land" && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
-        //console.log("elevated")
-        //return true
-      } else {
-        accept =  false
+        }
       }
     }
   }
+  console.log("accept: ", accept)
   return accept
 }
 
@@ -137,26 +131,6 @@ function findOne(rangeObject, rangeBoy) {
   });
 };
 
-function checkLanding() {
-  for (i = 0; i < levelObjects.length; i++) {
-    x = levelObjects[i]
-    for (y = 0; y < x.length; y++) {
-      item = x[y]
-      if (_.range(item.x - item.width, item.x + item.width + 1).includes(imageBoyPosition[0])) {
-        //console.log(_.range(item.x - item.width, item.x + item.width + 1))
-        //console.log(imageBoyPosition[1] + imageBoyPosition[3])
-        console.log(item)
-        console.log(imageBoyPosition[1] + (imageBoyPosition[3] / 2))
-        console.log(_.range(item.y - item.height, item.y + item.height + 1))
-        if (item.name === "bullet" && _.range(item.y - item.height, item.y + item.height + 1).includes(imageBoyPosition[1] + (imageBoyPosition[3]))) {
-          window.location.reload();
-        }
-        console.log(momentum)
-      }
-    }
-  }
-}
-
 function jump(momentum) {
   landed = false
   var counter = 0;
@@ -165,24 +139,24 @@ function jump(momentum) {
     imageBoyPosition[1] -= 10;
     rerender()
     counter++;
-    if(counter === 6 && momentum === "right") {
+    if(counter === 6 && momentum === "jumpright") {
       clearInterval(interval);
-      setTimeout(function(){ land() }, 60);
+      setTimeout(function(){ land("jumpright") }, 60);
       imageBoyPosition[0] += 60;
-    } else if (counter === 6 && momentum === "left") {
+    } else if (counter === 6 && momentum === "jumpleft") {
       clearInterval(interval);
-      setTimeout(function(){ land() }, 60);
+      setTimeout(function(){ land("jumpleft") }, 60);
       imageBoyPosition[0] -= 60;
-    } else if (counter === 6) {
+    } else if (counter === 6 && momentum === "jumpup") {
       clearInterval(interval);
-      setTimeout(function(){ land() }, 60);
+      setTimeout(function(){ land("jumpup") }, 60);
     }
   }, 30);
 }
 
-function land() {
+function land(momentum) {
   var interval = setInterval(function() {
-    if (!checkCollision("land") && imageBoyPosition[1] < 240) {
+    if (!checkCollision(momentum) && imageBoyPosition[1] < 240) {
       imageBoyPosition[1] += 10;
     }
     if(imageBoyPosition[1] >= 240) {
@@ -195,13 +169,13 @@ function land() {
 
 function moveBoy() {
   if (keyCombo[0] === 38 && keyCombo[1] === 39) {
-    jump("right");
+    jump("jumpright");
     keyCombo = []
   } else if (keyCombo[0] === 38 && keyCombo[1] === 37) {
-    jump("left");
+    jump("jumpleft");
     keyCombo = []
   } else if (keyCombo.includes(38)) {
-    jump();
+    jump("jumpup");
     keyCombo = []
   } else if (keyCombo.includes(37)) {
     if (!checkCollision("left")) {
