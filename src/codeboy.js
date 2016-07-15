@@ -1,3 +1,7 @@
+// document.getElementById("myForm").submit();
+//
+// formObject.submit()
+
 //canvas variables
 var canvas = document.getElementById("level");
 var context = canvas.getContext("2d");
