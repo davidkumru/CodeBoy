@@ -1,60 +1,59 @@
+//canvas variables
 var canvas = document.getElementById("level");
 var context = canvas.getContext("2d");
 
-var sky = {x: 0, y: 0, width: 900, height: 400, color: "#9FABCF"};
-var world = {x: 0, y: 300, width: 900, height: 100, color: "#A1D490"};
+//movement variables
 var direction = "";
-var keyCombo = [];
 var landed = true
-var imageSun = new Image();
+var keyCombo = [];
+
+//background images
 var imageBackg = new Image();
-var imageGrass = new Image();
+imageBackg.src = 'img/marioworld.png';
+var imageGround = new Image();
+imageGround.src = 'img/marioug.png';
+var imageSun = new Image();
+imageSun.src = 'img/sun2.png';
+
+//foreground images
 var imageCanon = new Image();
+imageCanon.src = 'img/BillBlasterPM.png';
 var imageBullet = new Image();
+imageBullet.src = 'img/bullet.png';
 var imageBulletPosition = [635, 273, 19, 19];
-var imageFlying = new Image();
-var imageFlyingPosition = [830, -30, 30, 30];
-var imageBoy = new Image();
 var imageBlock = new Image();
+imageBlock.src = 'img/block.png';
+var imageBoy = new Image();
+imageBoy.src = 'img/SMB3_Smallmario.png';
 var imageBoyPosition = [30, 240, 30, 60];
-var blockOne = {x: 90, y: 240, width: 30, height: 60, color: "black"};
-var audio = new Audio("img/Mario-jump-sound.mp3");
+var imageBird = new Image();
+imageBird.src = 'img/vlieg.png';
+var imageBirdPosition = [830, -30, 30, 30];
+
+//jumpSound
+var jumpSound = new Audio("img/Mario-jump-sound.mp3");
+
+//level objects
+var blocks = [{x: 90, y: 240, width: 30, height: 30}, {x: 180, y: 240, width: 30, height: 30}]
+
+var levelObjects = [blocks]
 
 function rerender() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  renderBlock(sky);
-  renderBlock(world);
-  renderBlock(blockOne);
-}
-
-function renderBlock(position) {
-  context.fillStyle = position.color;
-  context.fillRect(position.x, position.y, position.width, position.height);
-
-  imageBackg.src = 'img/marioworld.png';
   context.drawImage(imageBackg, 0, -10, 900, 600);
-
-  imageGrass.src = 'img/marioug.png';
-  context.drawImage(imageGrass, 0, 300, 900, 100);
-
-  imageSun.src = 'img/sun2.png';
+  context.drawImage(imageGround, 0, 300, 900, 100);
   context.drawImage(imageSun, 800, 0, 100, 100);
 
-  imageCanon.src = 'img/BillBlasterPM.png';
   context.drawImage(imageCanon, 650, 271, 32, 32);
-
-  imageBullet.src = 'img/bullet.png';
   context.drawImage(imageBullet, imageBulletPosition[0], imageBulletPosition[1], imageBulletPosition[2], imageBulletPosition[3]);
 
-  imageBlock.src = 'img/block.png';
-  context.drawImage(imageBlock, 90, 240, 30, 30);
-  context.drawImage(imageBlock, 90, 270, 30, 30);
+  for (i = 0; i < blocks.length; i++) {
+    context.drawImage(imageBlock, blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+    context.drawImage(imageBlock, blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+  }
 
-  imageBoy.src = 'img/SMB3_Smallmario.png';
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
 
-  imageFlying.src = 'img/vlieg.png';
-  context.drawImage(imageFlying, imageFlyingPosition[0], imageFlyingPosition[1], imageFlyingPosition[2], imageFlyingPosition[3]);
+  context.drawImage(imageBird, imageBirdPosition[0], imageBirdPosition[1], imageBirdPosition[2], imageBirdPosition[3]);
 };
 
 function shot() {
@@ -76,31 +75,40 @@ function shot() {
 function flyingthing() {
   var counter = 0;
   var interval = setInterval(function() {
-    imageFlyingPosition[0] -= 3;
-    imageFlyingPosition[1] += 2;
+    imageBirdPosition[0] -= 3;
+    imageBirdPosition[1] += 2;
     rerender()
     counter++;
     if(counter === 220){
-      imageFlyingPosition[0] += 660;
-      imageFlyingPosition[1] -= 440;
+      imageBirdPosition[0] += 660;
+      imageBirdPosition[1] -= 440;
       counter -= 220;
     }
   }, 20);
 }
 
 function checkCollision(momentum) {
-  if (_.range(blockOne.x - 30, blockOne.x + 30 + 1).includes(imageBoyPosition[0])) {
-    if (momentum === "left" && imageBoyPosition[0] > blockOne.x + 15 + 1) {
-      console.log("left hit")
-      return true
-    } else if (momentum === "right" && imageBoyPosition[0] < blockOne.x - 15) {
-      console.log("right hit")
-      return true
-    } else if (momentum === "land" && imageBoyPosition[1] < blockOne.y + blockOne.height) {
-      console.log("land hit")
-      return true
-    } else {
-      return false
+  for (i = 0; i < levelObjects.length; i++) {
+    x = levelObjects[i]
+    for (y = 0; y < x.length; y++) {
+      item = x[y]
+      if (_.range(item.x - item.width, item.x + item.width + 1).includes(imageBoyPosition[0])) {
+        console.log(_.range(item.x - item.width, item.x + item.width + 1))
+        console.log(imageBoyPosition[1] + imageBoyPosition[3])
+        console.log(item.y)
+        if (momentum === "left" && imageBoyPosition[0] > item.x + (item.width / 2) + 1) {
+          console.log("left hit")
+          return true
+        } else if (momentum === "right" && imageBoyPosition[0] < item.x - (item.width / 2)) {
+          console.log("right hit")
+          return true
+        } else if (momentum === "land" && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
+          console.log("land hit")
+          return true
+        } else {
+          return false
+        }
+      }
     }
   }
 }
@@ -108,7 +116,7 @@ function checkCollision(momentum) {
 function jump(momentum) {
   landed = false
   var counter = 0;
-  audio.play();
+  jumpSound.play();
   var interval = setInterval(function() {
     imageBoyPosition[1] -= 10;
     rerender()
