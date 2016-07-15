@@ -16,8 +16,8 @@ var imageSun = new Image();
 imageSun.src = 'img/sun2.png';
 
 //foreground images
-var imageCanon = new Image();
-imageCanon.src = 'img/BillBlasterPM.png';
+var imageCannon = new Image();
+imageCannon.src = 'img/BillBlasterPM.png';
 var imageBullet = new Image();
 imageBullet.src = 'img/bullet.png';
 var imageBulletPosition = [635, 273, 19, 19];
@@ -33,27 +33,29 @@ var imageBirdPosition = [830, -30, 30, 30];
 //jumpSound
 var jumpSound = new Audio("img/Mario-jump-sound.mp3");
 
-//level objects
-var blocks = [{x: 90, y: 240, width: 30, height: 30}, {x: 180, y: 240, width: 30, height: 30}]
-
-var levelObjects = [blocks]
-
 function rerender() {
+  //level objects
+  var blocks = [{x: 90, y: 240, width: 30, height: 30, image: imageBlock}, {x: 180, y: 240, width: 30, height: 30, image: imageBlock}]
+  var cannons = [{x: 650, y: 271, width: 32, height: 32, image: imageCannon}]
+  var cannonbullets = [{x: imageBulletPosition[0], y: imageBulletPosition[1], width: imageBulletPosition[2], height: imageBulletPosition[3], image: imageBullet}]
+  var birds = [{x: imageBirdPosition[0], y: imageBirdPosition[1], width: imageBirdPosition[2], height: imageBirdPosition[3], image: imageBird}]
+
+  levelObjects = [blocks, cannons, cannonbullets, birds]
+
   context.drawImage(imageBackg, 0, -10, 900, 600);
   context.drawImage(imageGround, 0, 300, 900, 100);
   context.drawImage(imageSun, 800, 0, 100, 100);
 
-  context.drawImage(imageCanon, 650, 271, 32, 32);
-  context.drawImage(imageBullet, imageBulletPosition[0], imageBulletPosition[1], imageBulletPosition[2], imageBulletPosition[3]);
-
-  for (i = 0; i < blocks.length; i++) {
-    context.drawImage(imageBlock, blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
-    context.drawImage(imageBlock, blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+  for (i = 0; i < levelObjects.length; i++) {
+    x = levelObjects[i]
+    for (y = 0; y < x.length; y++) {
+      item = x[y]
+      context.drawImage(item.image, item.x, item.y, item.width, item.height)
+    }
   }
 
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
 
-  context.drawImage(imageBird, imageBirdPosition[0], imageBirdPosition[1], imageBirdPosition[2], imageBirdPosition[3]);
 };
 
 function shot() {
