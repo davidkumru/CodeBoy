@@ -36,7 +36,7 @@ var jumpSound = new Audio("img/Mario-jump-sound.mp3");
 function rerender() {
   //level objects
   var blocks = [{x: 90, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}]
-  var cannons = [{x: 650, y: 271, width: 32, height: 32, image: imageCannon, name: "cannon"}]
+  var cannons = [{x: 650, y: 271, width: 30, height: 30, image: imageCannon, name: "cannon"}]
   var cannonbullets = [{x: imageBulletPosition[0], y: imageBulletPosition[1], width: imageBulletPosition[2], height: imageBulletPosition[3], image: imageBullet, name: "bullet"}]
   //var birds = [{x: imageBirdPosition[0], y: imageBirdPosition[1], width: imageBirdPosition[2], height: imageBirdPosition[3], image: imageBird}]
 
@@ -109,7 +109,7 @@ function checkCollision(momentum) {
       if (findOne(rangeObjectY, rangeBoyY) && findOne(rangeObjectX, rangeBoyX)) {
         onSide = true
         console.log("on side: ", onSide)
-        if (momentum === "left" && imageBoyPosition[0] < item.x + 15) {
+        if (momentum === "left" && imageBoyPosition[0] < item.x) {
           console.log("left hit")
           accept = false
         } else if (momentum === "right" && imageBoyPosition[0] + imageBoyPosition[2] > item.x) {
@@ -156,7 +156,8 @@ function jump(momentum) {
 
 function land(momentum) {
   var interval = setInterval(function() {
-    if (!checkCollision(momentum) && imageBoyPosition[1] < 240) {
+    if (!checkCollision("land") && imageBoyPosition[1] < 240) {
+      console.log("land: ", !checkCollision(momentum))
       imageBoyPosition[1] += 10;
     }
     if(imageBoyPosition[1] >= 240) {
