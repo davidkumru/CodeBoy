@@ -47,10 +47,35 @@ p {
   border-color: black;
   border-radius: 10px;
   text-align: center;
-  width: 400px;
+  width: 500px;
   margin: auto;
 }
 
+.SplashScreen {
+  font-family: monospace;
+  font-size: 14px;
+  background-color: white;
+  border-style: solid;
+  border-color: black;
+  border-radius: 10px;
+  text-align: center;
+  width: 500px;
+  margin: auto;
+}
+
+#StartButton {
+  background: #25A6E1;
+	padding:8px 13px;
+	color:#fff;
+	font-family:'monospace',sans-serif;
+	font-size:17px;
+	border-radius:4px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border:2px solid black;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
 canvas {
   border-width: 3px;
   border-radius: 10px;
@@ -66,5 +91,5 @@ canvas {
   border-radius: 10px;
   text-align: center;
   width: 400px;
-  margin: auto;  
+  margin: auto;
 }
