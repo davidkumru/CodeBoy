@@ -6,48 +6,38 @@
     <link rel="stylesheet" type="text/css" href="codeboy.css">
   </head>
   <body>
-    <!-- header + nav. bar -->
     <div class="header">
       <h3>CodeBoy</h3>
       |  <a href="scorelist.html">Score overview</a> |
     </div>
     <p>" The little block of code that could! "</p>
-<!-- Start button and name form -->
-      <div class="SplashScreen" style="display: show;">
-<!-- User form -->
-        <br>
-        <form action="">
-          <input type="text" name="username" placeholder="Please enter a username: ...">
-          <button>Confirm</button>
-        </form>
-        <hr>
-        <input id="StartButton" type="button"  value="Start"/>
-      </div>
-
-<!-- canvas code -->
-      <canvas id="level" width="900px" height="400px" style="display: none;">CodeBoy!</canvas>
-      <script src="src/lodash.js"></script>
-      <script src="src/codeboy.js"></script>
-
-<!-- Instructions on how to play below the game -->
+    <div class="SplashScreen" style="display: show;">
+      <br>
+      <form action="">
+        <input type="text" name="username" placeholder="Please enter a username: ...">
+        <button>Confirm</button>
+      </form>
+      <hr>
+      <input id="StartButton" type="button"  value="Start"/>
+    </div>
+    <canvas id="level" width="900px" height="400px" style="display: none;">CodeBoy!</canvas>
     <br>
     <div class="instructions">
       Use the arrows keys to move and jump.<br>
       <img src="img/keys.png" alt="Arrow keys keyboard" height="60">
     </div>
-
-<!-- start button -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <script src="src/userlist.js"></script>
-      <script>
-        $(document).ready(function(){
-          $("#StartButton").click(function(){
-            $(".SplashScreen").hide();
-            $("#level").show();
-          });
-        });
-      </script>
-      <script src="src/codeboy.js"></script>
-      <div id="results"></div>
+    <div id="results"></div>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+          <script>
+            $(document).ready(function(){
+              $("#StartButton").click(function(){
+                $(".SplashScreen").hide();
+                $("#level").show();
+              });
+            });
+          </script>
+          <script src="src/userlist.js"></script>
+          <script src="src/lodash.js"></script>
+          <script src="src/codeboy.js"></script>
   </body>
 </html>
