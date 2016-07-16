@@ -10,8 +10,6 @@ var keyCombo = [];
 //background images
 var imageBackg = new Image();
 imageBackg.src = 'img/marioworld.png';
-var twoImageBackg = new Image();
-twoImageBackg.src = 'img/dessert.png';
 var imageGround = new Image();
 imageGround.src = 'img/marioug.png';
 var imageSun = new Image();
@@ -42,7 +40,6 @@ var levelObjects = [blocks]
 
 function rerender() {
   context.drawImage(imageBackg, 0, -10, 900, 600);
-  context.drawImage(twoImageBackg, 0, 0, 900, 485);
   context.drawImage(imageGround, 0, 300, 900, 100);
   context.drawImage(imageSun, 800, 0, 100, 100);
 
