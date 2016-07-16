@@ -100,13 +100,12 @@ function checkVerticalCollision() {
       }
     }
   }
-  console.log("on top: ", onTop)
   return onTop
 }
 
 function checkCollision(momentum) {
   var onSide = false
-  var accept = false
+  var blocked = false
   for (i = 0; i < levelObjects.length; i++) {
     x = levelObjects[i]
     for (y = 0; y < x.length; y++) {
@@ -119,20 +118,20 @@ function checkCollision(momentum) {
       if (findOne(rangeObjectY, rangeBoyY) && findOne(rangeObjectX, rangeBoyX)) {
         onSide = true
         console.log("on side: ", onSide)
-        if (momentum === "left" && imageBoyPosition[0] < item.x) {
+        if (momentum === "left" && imageBoyPosition[0] < item.x - 1) {
           console.log("left hit")
-          accept = false
-        } else if (momentum === "right" && imageBoyPosition[0] + imageBoyPosition[2] > item.x) {
+          blocked = false
+        } else if (momentum === "right" && imageBoyPosition[0] + imageBoyPosition[2] > item.x + item.width + 1) {
           console.log("right hit")
-          accept = false
+          blocked = false
         } else {
-          accept = true
+          blocked = true
         }
       }
     }
   }
-  console.log("blocked: ", accept)
-  return accept
+  console.log("blocked: ", blocked)
+  return blocked
 }
 
 function findOne(rangeObject, rangeBoy) {
@@ -143,6 +142,7 @@ function findOne(rangeObject, rangeBoy) {
 
 function jump(momentum) {
   landed = false
+  keyCombo = []
   var counter = 0;
   jumpSound.play();
   var interval = setInterval(function() {
@@ -188,13 +188,10 @@ function land() {
 function moveBoy() {
   if (keyCombo[0] === 38 && keyCombo[1] === 39) {
     jump("jumpright");
-    keyCombo = []
   } else if (keyCombo[0] === 38 && keyCombo[1] === 37) {
     jump("jumpleft");
-    keyCombo = []
   } else if (keyCombo.includes(38)) {
     jump("jumpup");
-    keyCombo = []
   } else if (keyCombo.includes(37)) {
     if (!checkCollision("left")) {
       imageBoyPosition[0] -= 15;
@@ -208,6 +205,7 @@ function moveBoy() {
     }
     rerender()
   }
+  setTimeout(function(){ keyCombo = [] }, 30);
 };
 
 function inputKey(e) {
