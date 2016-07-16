@@ -22,7 +22,7 @@
     </div>
     <canvas id="level" width="900px" height="400px" style="display: none;">CodeBoy!</canvas>
     <br>
-    <div class="instructions">
+    <div class="instructions" style="display: none;">>
       Use the arrows keys to move and jump.<br>
       <img src="img/keys.png" alt="Arrow keys keyboard" height="60">
     </div>
@@ -33,6 +33,7 @@
               $("#StartButton").click(function(){
                 $(".SplashScreen").hide();
                 $("#level").show();
+                $(".instructions").show();
               });
             });
           </script>
