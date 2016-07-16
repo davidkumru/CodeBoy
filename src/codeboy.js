@@ -127,7 +127,7 @@ function checkCollision(momentum) {
           theme.pause()
           complete.play();
           landed = false;
-          alert("Thnks Mario. You saved me. The real princess is in another level");
+          alert("Thanks Mario. You saved me! However, the real princess is in another level.");
         }
         if (momentum === "left" && imageBoyPosition[0] < item.x - 1) {
           blocked = false
