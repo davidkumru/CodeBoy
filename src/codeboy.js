@@ -126,7 +126,8 @@ function checkCollision(momentum) {
         if (onSide && item.name === "peach" && imageBoyPosition[1] + imageBoyPosition[3] > item.y) {
           theme.pause()
           complete.play();
-          landed = false
+          landed = false;
+          alert("Thnks Mario. You saved me. The real princess is in another level");
         }
         if (momentum === "left" && imageBoyPosition[0] < item.x - 1) {
           blocked = false
