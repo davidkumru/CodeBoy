@@ -89,8 +89,8 @@ function checkVerticalCollision() {
       rangeObjectY = _.range(item.y - 1, item.y + item.height + 1)
       rangeBoyY = _.range(imageBoyPosition[1], imageBoyPosition[1] + imageBoyPosition[3])
 
-      if (findOne(rangeObjectX, rangeBoyX) && findOne(rangeObjectY, rangeBoyY)) {
-        //if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
+      //if (findOne(rangeObjectX, rangeBoyX) && findOne(rangeObjectY, rangeBoyY)) {
+        if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
         onTop = true
         if (onTop && item.name === "bullet") {
           cannonbullets.splice(y, 1);
