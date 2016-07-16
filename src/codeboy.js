@@ -22,6 +22,8 @@ imageBullet.src = 'img/bullet.png';
 var imageBlock = new Image();
 imageBlock.src = 'img/block.png';
 var imageBoy = new Image();
+var imagePeach = new Image();
+imagePeach.src = 'img/peach.png';
 imageBoy.src = 'img/SMB3_Smallmario.png';
 var imageBoyPosition = [30, 240, 30, 60];
 
@@ -31,17 +33,20 @@ var theme = new Audio("img/theme.mp3");
 var death = new Audio("img/death.mp3");
 var cannon = new Audio("img/cannon.wav");
 var stomp = new Audio("img/stomp.wav");
+var complete = new Audio("img/complete.mp3");
 
 //level objects
 ground = [{x: 0, y: 300, width: 900, height: 100, image: imageGround, name: "ground"}]
 
-blocks = [{x: 90, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 210, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 300, y: 180, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 390, y: 150, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 450, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 550, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}]
+blocks = [{x: 90, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 210, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 300, y: 180, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 390, y: 150, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 450, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 540, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}]
 
 cannons = [{x: 650, y: 270, width: 30, height: 30, image: imageCannon, name: "cannon"}]
 
+princess = [{x: 800, y: 240, width: 30, height: 60, image: imagePeach, name: "peach"}]
+
 cannonbullets = [{x: 640, y: 270, width: 20, height: 20, image: imageBullet, name: "bullet"}]
 
-levelObjects = [blocks, cannons, cannonbullets, ground]
+levelObjects = [blocks, princess, cannons, cannonbullets, ground]
 
 function rerender() {
   context.drawImage(imageBackg, 0, -10, 900, 600);
@@ -118,6 +123,11 @@ function checkCollision(momentum) {
           landed = false
           setTimeout(function(){ window.location.reload() }, 3100);
         }
+        if (onSide && item.name === "peach" && imageBoyPosition[1] + imageBoyPosition[3] > item.y) {
+          theme.pause()
+          complete.play();
+          landed = false
+        }
         if (momentum === "left" && imageBoyPosition[0] < item.x - 1) {
           blocked = false
         } else if (momentum === "right" && imageBoyPosition[0] + imageBoyPosition[2] > item.x + item.width + 1) {
@@ -168,12 +178,10 @@ function jumpMove(momentum) {
 function land() {
   var interval = setInterval(function() {
     if (!checkVerticalCollision()) {
-      console.log("descend: ", !checkVerticalCollision())
       imageBoyPosition[1] += 10;
       rerender()
     }
     if(checkVerticalCollision()) {
-      console.log("landed: ", checkVerticalCollision())
       landed = true;
       rerender()
       clearInterval(interval);
