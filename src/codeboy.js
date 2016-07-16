@@ -22,6 +22,8 @@ imageBullet.src = 'img/bullet.png';
 var imageBlock = new Image();
 imageBlock.src = 'img/block.png';
 var imageBoy = new Image();
+var imagePeach = new Image();
+imagePeach.src = 'img/peach.png';
 imageBoy.src = 'img/SMB3_Smallmario.png';
 var imageBoyPosition = [30, 240, 30, 60];
 
@@ -35,13 +37,14 @@ var stomp = new Audio("img/stomp.wav");
 //level objects
 ground = [{x: 0, y: 300, width: 900, height: 100, image: imageGround, name: "ground"}]
 
-blocks = [{x: 90, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 210, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 300, y: 180, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 390, y: 150, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 450, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 550, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}]
+blocks = [{x: 90, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 270, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 210, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 300, y: 180, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 390, y: 150, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 450, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 540, y: 210, width: 30, height: 30, image: imageBlock, name: "block"}]
 
 cannons = [{x: 650, y: 270, width: 30, height: 30, image: imageCannon, name: "cannon"}]
+princess = [{x: 800, y: 240, width: 30, height: 60, image: imagePeach, name: "peach"}]
 
 cannonbullets = [{x: 640, y: 270, width: 20, height: 20, image: imageBullet, name: "bullet"}]
 
-levelObjects = [blocks, cannons, cannonbullets, ground]
+levelObjects = [blocks, princess, cannons, cannonbullets, ground]
 
 function rerender() {
   context.drawImage(imageBackg, 0, -10, 900, 600);
