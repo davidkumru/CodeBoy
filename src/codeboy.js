@@ -19,29 +19,28 @@ var imageCannon = new Image();
 imageCannon.src = 'img/BillBlasterPM.png';
 var imageBullet = new Image();
 imageBullet.src = 'img/bullet.png';
-var imageBulletPosition = [635, 273, 19, 19];
 var imageBlock = new Image();
 imageBlock.src = 'img/block.png';
 var imageBoy = new Image();
 imageBoy.src = 'img/SMB3_Smallmario.png';
 var imageBoyPosition = [30, 240, 30, 60];
-//var imageBird = new Image();
-//imageBird.src = 'img/vlieg.png';
-//var imageBirdPosition = [830, -30, 30, 30];
 
 //jumpSound
 var jumpSound = new Audio("img/Mario-jump-sound.mp3");
+var theme = new Audio("img/theme.mp3");
+var death = new Audio("img/death.mp3");
+var cannon = new Audio("img/cannon.wav");
+var stomp = new Audio("img/stomp.wav");
+
+//level objects
+ground = [{x: 0, y: 300, width: 900, height: 100, image: imageGround, name: "ground"}]
+blocks = [{x: 90, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}]
+cannons = [{x: 650, y: 270, width: 30, height: 30, image: imageCannon, name: "cannon"}]
+cannonbullets = [{x: 640, y: 270, width: 20, height: 20, image: imageBullet, name: "bullet"}]
+
+levelObjects = [blocks, cannons, cannonbullets, ground]
 
 function rerender() {
-  //level objects
-  var ground = [{x: 0, y: 300, width: 900, height: 100, image: imageGround, name: "ground"}]
-  var blocks = [{x: 90, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}]
-  var cannons = [{x: 650, y: 271, width: 30, height: 30, image: imageCannon, name: "cannon"}]
-  var cannonbullets = [{x: imageBulletPosition[0], y: imageBulletPosition[1], width: imageBulletPosition[2], height: imageBulletPosition[3], image: imageBullet, name: "bullet"}]
-  //var birds = [{x: imageBirdPosition[0], y: imageBirdPosition[1], width: imageBirdPosition[2], height: imageBirdPosition[3], image: imageBird}]
-
-  levelObjects = [ground, blocks, cannons, cannonbullets]
-
   context.drawImage(imageBackg, 0, -10, 900, 600);
   context.drawImage(imageSun, 800, 0, 100, 100);
 
@@ -54,37 +53,22 @@ function rerender() {
   }
 
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
-
+  checkCollision()
 };
 
 function shot() {
   var counter = 0;
   var interval = setInterval(function() {
-    imageBulletPosition[0] -= 3;
+    cannonbullets[0].x -= 3;
     rerender()
     counter++;
-    if(counter === 172){
-      imageBulletPosition[0] += 516;
-      counter -= 172;
+    if(counter === 142){
+      cannonbullets[0].x += 426
+      counter -= 142;
+      cannon.play();
     }
   }, 10);
 }
-
-//function flyingthing() {
-//var counter = 0;
-//var interval = setInterval(function() {
-//imageBirdPosition[0] -= 3;
-//imageBirdPosition[1] += 2;
-//rerender()
-//counter++;
-//if(counter === 220){
-//imageBirdPosition[0] += 660;
-//imageBirdPosition[1] -= 440;
-//counter -= 220;
-//}
-//}, 20);
-//}
-
 
 function checkVerticalCollision() {
   var onTop = false
@@ -94,9 +78,17 @@ function checkVerticalCollision() {
       item = x[y]
       rangeObjectX = _.range(item.x - 1, item.x + item.width + 1)
       rangeBoyX = _.range(imageBoyPosition[0], imageBoyPosition[0] + imageBoyPosition[2])
+      rangeObjectY = _.range(item.y - 1, item.y + item.height + 1)
+      rangeBoyY = _.range(imageBoyPosition[1], imageBoyPosition[1] + imageBoyPosition[3])
 
-      if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
+      if (findOne(rangeObjectX, rangeBoyX) && findOne(rangeObjectY, rangeBoyY)) {
+      //if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
         onTop = true
+        if (onTop && item.name === "bullet") {
+          cannonbullets.splice(y, 1);
+          stomp.play()
+          land()
+        }
       }
     }
   }
@@ -117,12 +109,15 @@ function checkCollision(momentum) {
 
       if (findOne(rangeObjectY, rangeBoyY) && findOne(rangeObjectX, rangeBoyX)) {
         onSide = true
-        console.log("on side: ", onSide)
+        if (onSide && item.name === "bullet" && imageBoyPosition[1] + imageBoyPosition[3] > item.y) {
+          theme.pause()
+          death.play();
+          landed = false
+          setTimeout(function(){ window.location.reload() }, 3100);
+        }
         if (momentum === "left" && imageBoyPosition[0] < item.x - 1) {
-          console.log("left hit")
           blocked = false
         } else if (momentum === "right" && imageBoyPosition[0] + imageBoyPosition[2] > item.x + item.width + 1) {
-          console.log("right hit")
           blocked = false
         } else {
           blocked = true
@@ -130,7 +125,6 @@ function checkCollision(momentum) {
       }
     }
   }
-  console.log("blocked: ", blocked)
   return blocked
 }
 
@@ -148,7 +142,6 @@ function jump(momentum) {
   var interval = setInterval(function() {
     imageBoyPosition[1] -= 10;
     counter++;
-    console.log("ascend: ", counter)
     rerender()
     if (counter === 6) {
       jumpMove(momentum)
@@ -237,6 +230,6 @@ document.onkeydown = inputKey;
 
 rerender();
 
-shot();
+theme.play();
 
-//flyingthing();
+shot();
