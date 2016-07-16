@@ -4,9 +4,13 @@ canvas {
   display: block;
 }
 
-#header{
+.header {
     width:100%;
 }
+
+a {
+  color: black;
+ }
 
 nav {
   text-align: right;
@@ -24,9 +28,9 @@ h1 {
 
 body {
   background-image: url("img/7pDoP2C.png");
-  background-color: #ffffff;
-  background-repeat: no-repeat;
+  background-color: #cccccc;
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 p {
