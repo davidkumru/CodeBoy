@@ -3,7 +3,6 @@ var canvas = document.getElementById("level");
 var context = canvas.getContext("2d");
 
 //movement variables
-var direction = "";
 var landed = true
 var keyCombo = [];
 
@@ -35,15 +34,15 @@ var jumpSound = new Audio("img/Mario-jump-sound.mp3");
 
 function rerender() {
   //level objects
+  var ground = [{x: 0, y: 300, width: 900, height: 100, image: imageGround, name: "ground"}]
   var blocks = [{x: 90, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}, {x: 180, y: 240, width: 30, height: 30, image: imageBlock, name: "block"}]
   var cannons = [{x: 650, y: 271, width: 30, height: 30, image: imageCannon, name: "cannon"}]
   var cannonbullets = [{x: imageBulletPosition[0], y: imageBulletPosition[1], width: imageBulletPosition[2], height: imageBulletPosition[3], image: imageBullet, name: "bullet"}]
   //var birds = [{x: imageBirdPosition[0], y: imageBirdPosition[1], width: imageBirdPosition[2], height: imageBirdPosition[3], image: imageBird}]
 
-  levelObjects = [blocks, cannons, cannonbullets]
+  levelObjects = [ground, blocks, cannons, cannonbullets]
 
   context.drawImage(imageBackg, 0, -10, 900, 600);
-  context.drawImage(imageGround, 0, 300, 900, 100);
   context.drawImage(imageSun, 800, 0, 100, 100);
 
   for (i = 0; i < levelObjects.length; i++) {
@@ -55,8 +54,6 @@ function rerender() {
   }
 
   context.drawImage(imageBoy, imageBoyPosition[0], imageBoyPosition[1], imageBoyPosition[2], imageBoyPosition[3]);
-
-  //checkCollision()
 
 };
 
@@ -88,8 +85,26 @@ function shot() {
 //}, 20);
 //}
 
-function checkCollision(momentum) {
+
+function checkVerticalCollision() {
   var onTop = false
+  for (i = 0; i < levelObjects.length; i++) {
+    x = levelObjects[i]
+    for (y = 0; y < x.length; y++) {
+      item = x[y]
+      rangeObjectX = _.range(item.x - 1, item.x + item.width + 1)
+      rangeBoyX = _.range(imageBoyPosition[0], imageBoyPosition[0] + imageBoyPosition[2])
+
+      if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
+        onTop = true
+      }
+    }
+  }
+  console.log("on top: ", onTop)
+  return onTop
+}
+
+function checkCollision(momentum) {
   var onSide = false
   var accept = false
   for (i = 0; i < levelObjects.length; i++) {
@@ -101,11 +116,6 @@ function checkCollision(momentum) {
       rangeObjectY = _.range(item.y, item.y + item.height)
       rangeBoyY = _.range(imageBoyPosition[1], imageBoyPosition[1] + imageBoyPosition[3])
 
-      if (findOne(rangeObjectX, rangeBoyX) && imageBoyPosition[1] + imageBoyPosition[3] === item.y) {
-        onTop = true
-        console.log("on top: ", onTop)
-        accept = true
-      }
       if (findOne(rangeObjectY, rangeBoyY) && findOne(rangeObjectX, rangeBoyX)) {
         onSide = true
         console.log("on side: ", onSide)
@@ -116,12 +126,12 @@ function checkCollision(momentum) {
           console.log("right hit")
           accept = false
         } else {
-        accept = true
+          accept = true
         }
       }
     }
   }
-  console.log("accept: ", accept)
+  console.log("blocked: ", accept)
   return accept
 }
 
@@ -137,34 +147,41 @@ function jump(momentum) {
   jumpSound.play();
   var interval = setInterval(function() {
     imageBoyPosition[1] -= 10;
-    rerender()
     counter++;
-    if(counter === 6 && momentum === "jumpright") {
+    console.log("ascend: ", counter)
+    rerender()
+    if (counter === 6) {
+      jumpMove(momentum)
       clearInterval(interval);
-      setTimeout(function(){ land("jumpright") }, 60);
-      imageBoyPosition[0] += 60;
-    } else if (counter === 6 && momentum === "jumpleft") {
-      clearInterval(interval);
-      setTimeout(function(){ land("jumpleft") }, 60);
-      imageBoyPosition[0] -= 60;
-    } else if (counter === 6 && momentum === "jumpup") {
-      clearInterval(interval);
-      setTimeout(function(){ land("jumpup") }, 60);
     }
   }, 30);
 }
 
-function land(momentum) {
+function jumpMove(momentum) {
+  if(momentum === "jumpright") {
+    imageBoyPosition[0] += 60;
+    setTimeout(function(){ land() }, 60);
+  } else if (momentum === "jumpleft") {
+    imageBoyPosition[0] -= 60;
+    setTimeout(function(){ land() }, 60);
+  } else if (momentum === "jumpup") {
+    setTimeout(function(){ land() }, 60);
+  }
+}
+
+function land() {
   var interval = setInterval(function() {
-    if (!checkCollision("land") && imageBoyPosition[1] < 240) {
-      console.log("land: ", !checkCollision(momentum))
+    if (!checkVerticalCollision()) {
+      console.log("descend: ", !checkVerticalCollision())
       imageBoyPosition[1] += 10;
+      rerender()
     }
-    if(imageBoyPosition[1] >= 240) {
+    if(checkVerticalCollision()) {
+      console.log("landed: ", checkVerticalCollision())
+      landed = true;
+      rerender()
       clearInterval(interval);
     }
-    rerender()
-    landed = true;
   }, 30);
 }
 
@@ -181,11 +198,13 @@ function moveBoy() {
   } else if (keyCombo.includes(37)) {
     if (!checkCollision("left")) {
       imageBoyPosition[0] -= 15;
+      land()
     }
     rerender()
   } else if (keyCombo.includes(39)) {
     if (!checkCollision("right")) {
       imageBoyPosition[0] += 15;
+      land()
     }
     rerender()
   }
@@ -196,24 +215,20 @@ function inputKey(e) {
     e = e || window.event;
     if (e.keyCode == '38') {
       e.preventDefault();
-      direction = "up";
       keyCombo[0]= e.keyCode;
       moveBoy()
     }
     //else if (e.keyCode == '40') {
     //e.preventDefault();
-    //direction = "down";
     //keyCombo[0]= e.keyCode;
     //}
     else if (e.keyCode == '37') {
       e.preventDefault();
-      direction = "left";
       keyCombo[1]= e.keyCode;
       moveBoy()
     }
     else if (e.keyCode == '39') {
       e.preventDefault();
-      direction = "right";
       keyCombo[1]= e.keyCode;
       moveBoy()
     }
