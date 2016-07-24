@@ -1,6 +1,8 @@
 # CodeBoy
 2D platformer engine in JavaScript.
 
+![screenshot](/img/codeboy_preview.png?raw=true)
+
 ## Features
 - Constructing levels is as easy as adding additional level objects (containing coordinates and size) to the corresponding object-arrays. All objects are automatically processed by the rerender function.
 ```javascript
